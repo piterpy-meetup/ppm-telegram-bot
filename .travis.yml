@@ -16,10 +16,11 @@ script:
     ORG_CHAT_ID='1'
     poetry run python -c
     "from ppm_telegram_bot.api import app; import json; schema = app.openapi(); json.dump(schema, open('openapi.json', 'w'))"
+  - cat openapi.json
   - git clone https://github.com/b0g3r/fastapi_client
   - >
     ./fastapi_client/scripts/generate.sh
-    -i ../openapi.json
+    -i openapi.json
     -p ppm_telegram_bot_client
     -o .
     --with-meta
