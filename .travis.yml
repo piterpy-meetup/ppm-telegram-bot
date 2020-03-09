@@ -9,7 +9,7 @@ install:
   - poetry install
 
 script:
-  >
+  - >
     TELEGRAM_BOT_API_KEY='1:a'
     TELEGRAM_BOT_WEBHOOK_ENDPOINT=''
     TELEGRAM_BOT_WEBHOOK_SECRET=''
@@ -17,7 +17,7 @@ script:
     poetry run python -c
     "from ppm_telegram_bot.api import app; import json; schema = app.openapi(); json.dump(schema, open('openapi.json', 'w'))"
   - git clone https://github.com/b0g3r/fastapi_client
-  >
+  - >
     ./fastapi_client/scripts/generate.sh
     -i ../openapi.json
     -p ppm_telegram_bot_client
