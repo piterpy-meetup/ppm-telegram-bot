@@ -1,0 +1,31 @@
+language: python
+python: 3.8
+
+services:
+  - docker
+
+install:
+  - pip install poetry>=1.0.0
+  - poetry install
+
+script:
+  >
+    TELEGRAM_BOT_API_KEY='1:a'
+    TELEGRAM_BOT_WEBHOOK_ENDPOINT=''
+    TELEGRAM_BOT_WEBHOOK_SECRET=''
+    ORG_CHAT_ID='1'
+    poetry run python -c
+    "from ppm_telegram_bot.api import app; import json; schema = app.openapi(); json.dump(schema, open('openapi.json', 'w'))"
+  - git clone https://github.com/b0g3r/fastapi_client
+  >
+    ./fastapi_client/scripts/generate.sh
+    -i ../openapi.json
+    -p ppm_telegram_bot_client
+    -o .
+    --with-meta
+    --
+    --additional-properties=packageVersion=0.1.0
+  - cd ppm_telegram_bot_client
+  - poetry run python setup.py sdist
+  - pip install twine
+  - twine upload --repository-url https://test.pypi.org/legacy/ dist/*
