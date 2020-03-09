@@ -9,6 +9,8 @@ install:
   - poetry install
 
 script:
+  - set -ev
+  - echo "Generate schema definition (openapi.json)"
   - >
     TELEGRAM_BOT_API_KEY='1:a'
     TELEGRAM_BOT_WEBHOOK_ENDPOINT=''
@@ -17,6 +19,8 @@ script:
     poetry run python -c
     "from ppm_telegram_bot.api import app; import json; schema = app.openapi(); json.dump(schema, open('openapi.json', 'w'))"
   - cat openapi.json
+
+  - echo "Generate python client from schema definition"
   - git clone https://github.com/b0g3r/fastapi_client
   - >
     ./fastapi_client/scripts/generate.sh
@@ -26,7 +30,15 @@ script:
     --with-meta
     --
     --additional-properties=packageVersion=0.1.0
+    || true
+
+  - echo "Publish package to PyPI"
   - cd ppm_telegram_bot_client
   - poetry run python setup.py sdist
   - pip install twine
-  - twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+  - >
+    twine upload
+    --username __token__
+    --password $PYPI_PASSWORD
+    dist/*
+
