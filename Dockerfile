@@ -13,4 +13,4 @@ RUN poetry config virtualenvs.create false && \
 
 COPY . /opt/project/
 
-CMD /opt/project/run-app.sh
+CMD ["/opt/project/run-app.sh"]
