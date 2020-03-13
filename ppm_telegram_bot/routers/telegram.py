@@ -6,7 +6,6 @@ telegram sends to us data about events. We should return "200 OK" and then do pr
 
 More info about webhook mechanism: https://core.telegram.org/bots/webhooks
 """
-from secrets import compare_digest
 from typing import (
     Dict,
     Any,
@@ -19,9 +18,11 @@ from fastapi import (
     Depends,
     Body,
 )
-from starlette.exceptions import HTTPException
+from fastapi_security_telegram_webhook import OnlyTelegramNetworkWithSecret
 from starlette.responses import Response
 from starlette.status import HTTP_200_OK
+
+
 from ppm_telegram_bot.dependencies import (
     bot_dispatcher,
     telegram_bot,
@@ -29,23 +30,18 @@ from ppm_telegram_bot.dependencies import (
 from ppm_telegram_bot.settings import settings
 
 router = APIRouter()
+telegram_webhook_security = OnlyTelegramNetworkWithSecret(
+    real_secret=settings.TELEGRAM_BOT_WEBHOOK_SECRET.get_secret_value()
+)
 
 
-@router.post("/webhook/{secret}")
+@router.post("/webhook/{secret}", dependencies=[Depends(telegram_webhook_security)])
 async def telegram_webhook(
-    secret: str,
-    update_raw: Dict[str, Any] = Body(...),
-    dp: Dispatcher = Depends(bot_dispatcher),
+    update_raw: Dict[str, Any] = Body(...), dp: Dispatcher = Depends(bot_dispatcher),
 ) -> Response:
     """
     Pass the new update (event from telegram) to bot dispatcher for processing.
-
-    Also checks `secret` in URL, so we build a little security around getting new updates.
     """
-    real_secret = settings.TELEGRAM_BOT_WEBHOOK_SECRET.get_secret_value()
-    if not compare_digest(secret, real_secret):
-        raise HTTPException(status_code=403)
-
     telegram_update = Update(**update_raw)
     await dp.process_update(telegram_update)
     return Response(status_code=HTTP_200_OK)
