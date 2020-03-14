@@ -1,0 +1,28 @@
+name: check-release
+
+on:
+  pull_request:
+
+jobs:
+  check-release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
+    - name: Get latest tag
+      id: latesttag
+      env:
+        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      run: |
+        git fetch
+        echo "::set-output name=latest_tag::$(git describe --always --tags `git rev-list --tags --max-count=1`)"
+    - name: Validate poetry version
+      run: |
+        poetry_version=$(cat pyproject.toml | grep 'version =' | cut -d ' ' -f 3 | sed 's/\"//g')
+        echo "$poetry_version $TAG"
+        python scripts/validate_poetry_version.py $poetry_version ${{ steps.latesttag.outputs.latest_tag }}
+

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ppm-telegram-bot"
-version = "0.1.0"
+version = "0.1.5"
 description = ""
 authors = ["Dima Boger <meetup@piterpy.ru>"]
 license = "MIT"
@@ -16,6 +16,7 @@ uvicorn = "^0.11.3"
 [tool.poetry.dev-dependencies]
 mypy = "^0.761"
 black = "^19.10b0"
+twine = "^3.1.1"
 
 [build-system]
 requires = ["poetry>=0.12"]
