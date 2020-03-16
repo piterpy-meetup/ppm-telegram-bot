@@ -12,6 +12,6 @@ from aiogram import types
 from ppm_telegram_bot.telegram.dispatcher import dispatcher
 
 
-@dispatcher.message_handler()
-async def echo(message: types.Message) -> None:
+@dispatcher.message_handler(commands=['healthcheck'])
+async def echo_health_check(message: types.Message) -> None:
     await dispatcher.bot.send_message(message.chat.id, message.text)
