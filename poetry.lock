@@ -201,6 +201,23 @@ fastapi = "*"
 
 [[package]]
 category = "main"
+description = "WSGI HTTP Server for UNIX"
+name = "gunicorn"
+optional = false
+python-versions = ">=3.4"
+version = "20.0.4"
+
+[package.dependencies]
+setuptools = ">=3.0"
+
+[package.extras]
+eventlet = ["eventlet (>=0.9.7)"]
+gevent = ["gevent (>=0.13)"]
+setproctitle = ["setproctitle"]
+tornado = ["tornado (>=0.2)"]
+
+[[package]]
+category = "main"
 description = "A pure-Python, bring-your-own-I/O implementation of HTTP/1.1"
 name = "h11"
 optional = false
@@ -558,7 +575,7 @@ idna = ">=2.0"
 multidict = ">=4.0"
 
 [metadata]
-content-hash = "cf888a407329724e55f4e7848eb0873961c8218b0f6c6adfaa0b011233be7398"
+content-hash = "232850185df3d88d1afdcccfd72dac86e9df0608724c12ffbd11a3567ba79da1"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -680,6 +697,10 @@ fastapi = [
 fastapi-security-telegram-webhook = [
     {file = "fastapi-security-telegram-webhook-0.2.0.tar.gz", hash = "sha256:aa3c908cfa8ba9305fa483d2958aea52bd4605554fea9f429bbf95c2bf2e2d51"},
     {file = "fastapi_security_telegram_webhook-0.2.0-py3-none-any.whl", hash = "sha256:22d1575add1a6e239956ccc8fb8819964393d2e5ee8bef181e6f4e5ee63a8df1"},
+]
+gunicorn = [
+    {file = "gunicorn-20.0.4-py2.py3-none-any.whl", hash = "sha256:cd4a810dd51bf497552cf3f863b575dabd73d6ad6a91075b65936b151cbf4f9c"},
+    {file = "gunicorn-20.0.4.tar.gz", hash = "sha256:1904bb2b8a43658807108d59c3f3d56c2b6121a701161de0ddf9ad140073c626"},
 ]
 h11 = [
     {file = "h11-0.9.0-py2.py3-none-any.whl", hash = "sha256:4bc6d6a1238b7615b266ada57e0618568066f57dd6fa967d1290ec9309b2f2f1"},

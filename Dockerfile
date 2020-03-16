@@ -2,8 +2,8 @@ FROM python:3.8
 
 WORKDIR /opt/project
 
-RUN pip install poetry>=1.0.0 && \
-    pip install gunicorn==20
+RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+ENV PATH="/root/.poetry/bin:$PATH"
 
 COPY pyproject.toml poetry.lock /opt/project/
 
@@ -12,5 +12,7 @@ RUN poetry config virtualenvs.create false && \
     poetry install --no-dev
 
 COPY . /opt/project/
+# we need to install package itself for version resolving
+RUN poetry install --no-dev
 
 CMD ["/opt/project/run-app.sh"]
