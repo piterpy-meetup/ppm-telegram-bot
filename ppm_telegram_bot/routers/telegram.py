@@ -6,12 +6,16 @@ telegram sends to us data about events. We should return "200 OK" and then do pr
 
 More info about webhook mechanism: https://core.telegram.org/bots/webhooks
 """
+import logging
 from typing import (
     Dict,
     Any,
 )
 
-from aiogram import Dispatcher
+from aiogram import (
+    Bot,
+    Dispatcher,
+)
 from aiogram.types import Update
 from fastapi import (
     APIRouter,
@@ -19,6 +23,8 @@ from fastapi import (
     Body,
 )
 from fastapi_security_telegram_webhook import OnlyTelegramNetworkWithSecret
+from fastapi_security_telegram_webhook.security import SECRET_PATH_PARAM
+from starlette.requests import Request
 from starlette.responses import Response
 from starlette.status import HTTP_200_OK
 
@@ -30,7 +36,18 @@ from ppm_telegram_bot.dependencies import (
 from ppm_telegram_bot.settings import settings
 
 router = APIRouter()
-telegram_webhook_security = OnlyTelegramNetworkWithSecret(
+
+logger = logging.getLogger("api")
+logger.setLevel(logging.DEBUG)
+
+
+class Lifehack(OnlyTelegramNetworkWithSecret):
+    def __call__(self, request: Request, request_secret: str = SECRET_PATH_PARAM):
+        logger.debug(str(request.headers))
+        super().__call__(request, request_secret)
+
+
+telegram_webhook_security = Lifehack(
     real_secret=settings.TELEGRAM_BOT_WEBHOOK_SECRET.get_secret_value()
 )
 
