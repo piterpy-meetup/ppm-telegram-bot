@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ppm-telegram-bot"
-version = "0.1.7"
+version = "0.1.8"
 description = ""
 authors = ["Dima Boger <meetup@piterpy.ru>"]
 license = "MIT"
