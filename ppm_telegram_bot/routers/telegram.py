@@ -72,6 +72,7 @@ async def set_webhook() -> None:
     We need to check current webhook url first, because Telegram API has
     strong rate limit for `set_webhook` method.
     """
+    logger.debug("Check current telegram webhook")
     bot = telegram_bot()
     url = "{endpoint}/{secret}".format(
         endpoint=settings.TELEGRAM_BOT_WEBHOOK_ENDPOINT.rstrip("/"),
@@ -79,6 +80,7 @@ async def set_webhook() -> None:
     )
     current_url = (await bot.get_webhook_info())["url"]
     if current_url != url:
+        logger.debug("Set new telegram webhook")
         await bot.set_webhook(url=url)
 
 

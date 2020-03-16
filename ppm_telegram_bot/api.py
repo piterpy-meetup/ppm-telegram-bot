@@ -6,6 +6,8 @@ More info about used app structure: https://fastapi.tiangolo.com/tutorial/bigger
 If you want to create a new API endpoint add endpoint handler to existed router or
 create a new module in `routes` directory.
 """
+import logging
+
 from fastapi import FastAPI
 from fastapi.routing import APIRoute
 
@@ -14,6 +16,8 @@ from ppm_telegram_bot.routers import (
     telegram,
     triggers,
 )
+
+logging.basicConfig(level=logging.INFO)
 
 app = FastAPI(title="PPM Telegram Bot", version=ppm_telegram_bot.__version__,)
 app.include_router(telegram.router, prefix="/telegram", tags=["telegram"])
